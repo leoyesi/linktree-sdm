@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linktree Sekolah Athalia</title>
+  
+  <!-- FontAwesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { background-color: #f1f5f9; color: #334155; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
+    
+    /* App Container */
+    .container { width: 100%; max-width: 440px; background: #ffffff; border-radius: 24px; padding: 32px 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); text-align: center; }
+    
+    /* Profile Section */
+    .profile-header { margin-bottom: 20px; }
+    .logo-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; border: 3px solid #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .school-name { font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .school-tagline { font-size: 0.85rem; color: #64748b; line-height: 1.4; }
+    
+    /* User Email Bar */
+    .user-bar { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; font-size: 0.78rem; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .user-info { display: flex; align-items: center; gap: 8px; text-align: left; overflow: hidden; }
+    .user-info i { color: #1e3a8a; font-size: 1.1rem; flex-shrink: 0; }
+    .user-info span { color: #334155; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .btn-email { background: #e2e8f0; color: #1e293b; border: none; padding: 6px 10px; border-radius: 8px; font-size: 0.72rem; cursor: pointer; font-weight: 600; transition: all 0.2s; flex-shrink: 0; }
+    .btn-email:hover { background: #cbd5e1; }
+
+    /* Links List */
+    .links-container { display: flex; flex-direction: column; gap: 12px; }
+    .link-btn { display: flex; align-items: center; justify-content: center; position: relative; padding: 15px 20px; background-color: #1e3a8a; color: #ffffff; border: none; border-radius: 14px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.15); width: 100%; text-decoration: none; }
+    .link-btn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 6px 12px -1px rgba(30, 58, 138, 0.25); }
+    .link-btn i { position: absolute; left: 18px; font-size: 1.1rem; }
+
+    /* Loading State */
+    .loading-spinner { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 0; color: #64748b; font-size: 0.85rem; }
+    .spinner { border: 3px solid #e2e8f0; border-top: 3px solid #1e3a8a; border-radius: 50%; width: 32px; height: 32px; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* Modals */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 16px; opacity: 0; pointer-events: none; transition: all 0.25s ease; }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-card { background: white; border-radius: 20px; padding: 24px 20px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); }
+    .modal-card i.icon-error { font-size: 42px; color: #ef4444; margin-bottom: 10px; }
+    .modal-card i.icon-email { font-size: 42px; color: #1e3a8a; margin-bottom: 10px; }
+
+    /* Forms */
+    .form-group { text-align: left; margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.78rem; font-weight: 600; color: #334155; margin-bottom: 4px; }
+    .form-control { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.85rem; outline: none; transition: border 0.2s; }
+    .form-control:focus { border-color: #1e3a8a; }
+    .btn-group { display: flex; gap: 8px; margin-top: 16px; }
+    .btn-primary { flex: 1; padding: 10px; background: #1e3a8a; color: white; border: none; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+    .btn-secondary { padding: 10px 16px; background: #e2e8f0; color: #475569; border: none; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+    
+    /* Footer & Admin Trigger */
+    .admin-trigger { display: inline-block; margin-top: 20px; color: #94a3b8; font-size: 0.72rem; text-decoration: none; cursor: pointer; transition: color 0.2s; }
+    .admin-trigger:hover { color: #64748b; }
+    .footer { margin-top: 16px; font-size: 0.72rem; color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- State 1: Memuat Data -->
+    <div id="loading" class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Memuat tautan sekolah...</p>
+    </div>
+
+    <!-- State 2: Konten Utama -->
+    <div id="content" style="display: none;">
+      <div class="profile-header">
+        <img id="logo" src="" alt="Logo Sekolah" class="logo-img">
+        <h1 id="schoolName" class="school-name">Sekolah Athalia</h1>
+        <p id="schoolTagline" class="school-tagline"></p>
+      </div>
+
+      <!-- Informasi Sesi Email Pengguna -->
+      <div class="user-bar">
+        <div class="user-info">
+          <i class="fas fa-user-circle"></i>
+          <span id="userEmailText">Belum Atur Email</span>
+        </div>
+        <button class="btn-email" onclick="openEmailModal()">Atur Email</button>
+      </div>
+
+      <!-- Daftar Tombol Link -->
+      <div id="linksList" class="links-container"></div>
+
+      <!-- Panel Admin Trigger -->
+      <div>
+        <span onclick="openAdminModal()" class="admin-trigger"><i class="fas fa-lock"></i> Panel Admin</span>
+      </div>
+
+      <div class="footer">
+        <p>© <span id="year"></span> <span id="footerSchoolName">Sekolah Athalia</span>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Set Email -->
+  <div id="emailModal" class="modal-overlay">
+    <div class="modal-card">
+      <i class="fa-solid fa-envelope-circle-check icon-email"></i>
+      <h3 style="font-size: 1.05rem; color: #0f172a; margin-bottom: 6px;">Verifikasi Email SDM</h3>
+      <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 14px;">
+        Masukkan email resmi sekolah Anda untuk membuka tautan internal.
+      </p>
+      <form onsubmit="saveEmail(event)">
+        <div class="form-group">
+          <input type="email" id="inputEmail" class="form-control" placeholder="nama@sekolahathalia.sch.id" required>
+        </div>
+        <div class="btn-group">
+          <button type="button" onclick="closeModal('emailModal')" class="btn-secondary">Batal</button>
+          <button type="submit" class="btn-primary">Simpan Email</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Akses Ditolak -->
+  <div id="accessModal" class="modal-overlay">
+    <div class="modal-card">
+      <i class="fa-solid fa-circle-xmark icon-error"></i>
+      <h3 style="font-size: 1.05rem; color: #0f172a; margin-bottom: 6px;">Akses Ditolak</h3>
+      <p id="accessModalMsg" style="font-size: 0.8rem; color: #64748b; line-height: 1.4;">
+        Tautan ini khusus untuk staf/guru dengan email <strong>@sekolahathalia.sch.id</strong>.
+      </p>
+      <button onclick="closeModal('accessModal')" class="btn-primary" style="width: 100%; margin-top: 14px;">Tutup</button>
+    </div>
+  </div>
+
+  <!-- Modal Admin (Tambah Link) -->
+  <div id="adminModal" class="modal-overlay">
+    <div class="modal-card">
+      <h3 style="font-size: 1.05rem; color: #0f172a; margin-bottom: 14px;"><i class="fas fa-plus-circle"></i> Tambah Tautan Baru</h3>
+      <form id="adminForm" onsubmit="submitNewLink(event)">
+        <div class="form-group">
+          <label>PIN Rahasia Admin</label>
+          <input type="password" id="adminPin" class="form-control" placeholder="Masukkan PIN" required>
+        </div>
+        <div class="form-group">
+          <label>Judul Tautan</label>
+          <input type="text" id="linkTitle" class="form-control" placeholder="Contoh: Modul Pembelajaran" required>
+        </div>
+        <div class="form-group">
+          <label>URL / Link Tujuan</label>
+          <input type="url" id="linkUrl" class="form-control" placeholder="https://drive.google.com/..." required>
+        </div>
+        <div class="form-group">
+          <label>Ikon FontAwesome (Opsional)</label>
+          <input type="text" id="linkIcon" class="form-control" placeholder="Contoh: fas fa-file-pdf">
+        </div>
+        <div id="adminAlert" style="font-size: 0.78rem; margin-top: 6px; display: none;"></div>
+        <div class="btn-group">
+          <button type="button" onclick="closeModal('adminModal')" class="btn-secondary">Batal</button>
+          <button type="submit" id="btnSubmitAdmin" class="btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ PASTE URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI:
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzY9Ol670dtRCZTfb2s7QjZFswDQI3EiTtcU0sEYVNDUnIKWQ4h8-zSVgtavjDy3/exec";
+
+    let currentUserEmail = localStorage.getItem('athalia_user_email') || '';
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateUserBar();
+      loadData();
+    });
+
+    function updateUserBar() {
+      const emailText = document.getElementById('userEmailText');
+      if (currentUserEmail) {
+        emailText.innerText = currentUserEmail;
+      } else {
+        emailText.innerText = 'Email belum diatur';
+      }
+    }
+
+    function openEmailModal() {
+      document.getElementById('inputEmail').value = currentUserEmail;
+      document.getElementById('emailModal').classList.add('active');
+    }
+
+    function saveEmail(e) {
+      e.preventDefault();
+      const val = document.getElementById('inputEmail').value.trim();
+      if (val) {
+        currentUserEmail = val;
+        localStorage.setItem('athalia_user_email', currentUserEmail);
+        updateUserBar();
+        closeModal('emailModal');
+      }
+    }
+
+    function loadData() {
+      fetch(`${GAS_URL}?action=getData`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            renderLinktree(data);
+          } else {
+            alert("Gagal memuat data: " + (data.message || "Error server"));
+          }
+        })
+        .catch(err => {
+          alert("Gagal terhubung ke server Google Sheets.");
+        });
+    }
+
+    function renderLinktree(data) {
+      const profile = data.profile || {};
+      const links = data.links || [];
+
+      if (profile['Logo URL']) document.getElementById('logo').src = profile['Logo URL'];
+      if (profile['Nama Sekolah']) {
+        document.getElementById('schoolName').innerText = profile['Nama Sekolah'];
+        document.getElementById('footerSchoolName').innerText = profile['Nama Sekolah'];
+      }
+      if (profile['Tagline']) document.getElementById('schoolTagline').innerText = profile['Tagline'];
+
+      const themeColor = profile['Warna Utama'] || '#1e3a8a';
+      const linksList = document.getElementById('linksList');
+      linksList.innerHTML = '';
+
+      links.forEach(function(link) {
+        const btn = document.createElement('button');
+        btn.className = 'link-btn';
+        btn.style.backgroundColor = themeColor;
+        const iconClass = link.icon ? link.icon : 'fas fa-link';
+        btn.innerHTML = `<i class="${iconClass}"></i><span>${link.title}</span>`;
+        
+        btn.onclick = function() {
+          handleLinkClick(link.rowId, btn, link.title, iconClass);
+        };
+
+        linksList.appendChild(btn);
+      });
+
+      document.getElementById('year').innerText = new Date().getFullYear();
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+    }
+
+    function handleLinkClick(rowId, btnElement, title, iconClass) {
+      // Jika email belum diisi, buka modal pendaftaran email dulu
+      if (!currentUserEmail) {
+        openEmailModal();
+        return;
+      }
+
+      // Animasi tombol saat loading
+      btnElement.innerHTML = `<i class="fas fa-spinner fa-spin"></i><span>Memeriksa Akses...</span>`;
+      btnElement.style.pointerEvents = 'none';
+
+      fetch(`${GAS_URL}?action=getLinkAccess&rowId=${rowId}&email=${encodeURIComponent(currentUserEmail)}`)
+        .then(res => res.json())
+        .then(res => {
+          btnElement.innerHTML = `<i class="${iconClass}"></i><span>${title}</span>`;
+          btnElement.style.pointerEvents = 'auto';
+
+          if (res.success && res.url) {
+            window.open(res.url, '_blank');
+          } else {
+            document.getElementById('accessModalMsg').innerHTML = 
+              `Email <strong>${currentUserEmail}</strong> tidak diizinkan. Gunakan email berakhiran <strong>@sekolahathalia.sch.id</strong>.`;
+            document.getElementById('accessModal').classList.add('active');
+          }
+        })
+        .catch(() => {
+          btnElement.innerHTML = `<i class="${iconClass}"></i><span>${title}</span>`;
+          btnElement.style.pointerEvents = 'auto';
+          alert('Gagal terhubung ke server.');
+        });
+    }
+
+    function openAdminModal() {
+      document.getElementById('adminForm').reset();
+      document.getElementById('adminAlert').style.display = 'none';
+      document.getElementById('adminModal').classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function submitNewLink(e) {
+      e.preventDefault();
+      const pin = document.getElementById('adminPin').value;
+      const title = document.getElementById('linkTitle').value;
+      const url = document.getElementById('linkUrl').value;
+      const icon = document.getElementById('linkIcon').value;
+      
+      const btnSubmit = document.getElementById('btnSubmitAdmin');
+      const alertDiv = document.getElementById('adminAlert');
+
+      btnSubmit.innerText = 'Menyimpan...';
+      btnSubmit.disabled = true;
+
+      fetch(`${GAS_URL}?action=addLink&pin=${encodeURIComponent(pin)}&title=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}&icon=${encodeURIComponent(icon)}`)
+        .then(res => res.json())
+        .then(res => {
+          btnSubmit.innerText = 'Simpan';
+          btnSubmit.disabled = false;
+          alertDiv.style.display = 'block';
+
+          if (res.success) {
+            alertDiv.style.color = '#16a34a';
+            alertDiv.innerText = res.message;
+            setTimeout(() => {
+              closeModal('adminModal');
+              loadData();
+            }, 1000);
+          } else {
+            alertDiv.style.color = '#dc2626';
+            alertDiv.innerText = res.message;
+          }
+        })
+        .catch(() => {
+          btnSubmit.innerText = 'Simpan';
+          btnSubmit.disabled = false;
+          alertDiv.style.display = 'block';
+          alertDiv.style.color = '#dc2626';
+          alertDiv.innerText = 'Terjadi kesalahan koneksi.';
+        });
+    }
+  </script>
+</body>
+</html>
