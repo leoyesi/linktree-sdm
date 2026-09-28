@@ -13,27 +13,20 @@
     body { background-color: #f1f5f9; color: #334155; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
     
     .container { width: 100%; max-width: 440px; background: #ffffff; border-radius: 24px; padding: 32px 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); text-align: center; }
-    .profile-header { margin-bottom: 20px; }
+    .profile-header { margin-bottom: 24px; }
     .logo-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; border: 3px solid #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .school-name { font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
     .school-tagline { font-size: 0.85rem; color: #64748b; line-height: 1.4; }
-    
-    .user-bar { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; font-size: 0.78rem; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .user-info { display: flex; align-items: center; gap: 8px; text-align: left; overflow: hidden; }
-    .user-info i { color: #1e3a8a; font-size: 1.1rem; flex-shrink: 0; }
-    .user-info span { color: #334155; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .btn-email { background: #e2e8f0; color: #1e293b; border: none; padding: 6px 10px; border-radius: 8px; font-size: 0.72rem; cursor: pointer; font-weight: 600; transition: all 0.2s; flex-shrink: 0; }
-    .btn-email:hover { background: #cbd5e1; }
 
     .links-container { display: flex; flex-direction: column; gap: 12px; }
     
-    /* STYLING TOMBOL DIPERBARUI AGAR TEKS DAN IKON TIDAK TABRAKAN */
+    /* STYLING TOMBOL INSTAN (TAG <a>) */
     .link-btn { 
       display: flex; 
       align-items: center; 
       justify-content: center; 
       position: relative; 
-      padding: 12px 48px; /* Ruang aman 48px kiri-kanan agar teks tidak menabrak ikon */
+      padding: 12px 48px; /* Ruang aman agar teks tidak menabrak ikon */
       min-height: 52px;
       height: auto;
       background-color: #1e3a8a; 
@@ -53,7 +46,7 @@
       position: absolute; 
       left: 18px; 
       top: 50%;
-      transform: translateY(-50%); /* Ikon selalu tepat di tengah secara vertikal */
+      transform: translateY(-50%); /* Ikon tetap di tengah vertikal */
       font-size: 1.1rem; 
       flex-shrink: 0;
     }
@@ -61,7 +54,7 @@
       white-space: normal; /* Mengizinkan teks turun baris */
       word-break: break-word;
       text-align: center;
-      line-height: 1.35; /* Jarak antar-baris rapi */
+      line-height: 1.35;
     }
 
     .loading-spinner { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 0; color: #64748b; font-size: 0.85rem; }
@@ -71,8 +64,6 @@
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 16px; opacity: 0; pointer-events: none; transition: all 0.25s ease; }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-card { background: white; border-radius: 20px; padding: 24px 20px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); }
-    .modal-card i.icon-error { font-size: 42px; color: #ef4444; margin-bottom: 10px; }
-    .modal-card i.icon-email { font-size: 42px; color: #1e3a8a; margin-bottom: 10px; }
 
     /* Admin Tabs */
     .admin-tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
@@ -108,14 +99,6 @@
         <p id="schoolTagline" class="school-tagline"></p>
       </div>
 
-      <div class="user-bar">
-        <div class="user-info">
-          <i class="fas fa-user-circle"></i>
-          <span id="userEmailText">Belum Atur Email</span>
-        </div>
-        <button class="btn-email" onclick="openEmailModal()">Atur Email</button>
-      </div>
-
       <div id="linksList" class="links-container"></div>
 
       <div>
@@ -125,34 +108,6 @@
       <div class="footer">
         <p>© <span id="year"></span> <span id="footerSchoolName">Sekolah Athalia</span>.</p>
       </div>
-    </div>
-  </div>
-
-  <!-- Modal Set Email -->
-  <div id="emailModal" class="modal-overlay">
-    <div class="modal-card">
-      <i class="fa-solid fa-envelope-circle-check icon-email"></i>
-      <h3 style="font-size: 1.05rem; color: #0f172a; margin-bottom: 6px;">Verifikasi Email SDM</h3>
-      <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 14px;">Masukkan email resmi sekolah Anda untuk membuka tautan internal.</p>
-      <form onsubmit="saveEmail(event)">
-        <div class="form-group">
-          <input type="email" id="inputEmail" class="form-control" placeholder="nama@sekolahathalia.sch.id" required>
-        </div>
-        <div class="btn-group">
-          <button type="button" onclick="closeModal('emailModal')" class="btn-secondary">Batal</button>
-          <button type="submit" class="btn-primary">Simpan Email</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Akses Ditolak -->
-  <div id="accessModal" class="modal-overlay">
-    <div class="modal-card">
-      <i class="fa-solid fa-circle-xmark icon-error"></i>
-      <h3 style="font-size: 1.05rem; color: #0f172a; margin-bottom: 6px;">Akses Ditolak</h3>
-      <p id="accessModalMsg" style="font-size: 0.8rem; color: #64748b; line-height: 1.4;">Tautan ini khusus untuk staf/guru dengan email <strong>@sekolahathalia.sch.id</strong>.</p>
-      <button onclick="closeModal('accessModal')" class="btn-primary" style="width: 100%; margin-top: 14px;">Tutup</button>
     </div>
   </div>
 
@@ -220,35 +175,12 @@
   <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbzY9Ol670dtRCZTfb2s7QjZFswDQI3EiTtcU0sEYVNDUnIKWQ4h8-zSVgtavjDy3WuGOw/exec";
 
-    let currentUserEmail = localStorage.getItem('athalia_user_email') || '';
     let globalLinksData = [];
     let authenticatedPin = "";
 
     document.addEventListener('DOMContentLoaded', function() {
-      updateUserBar();
       loadData();
     });
-
-    function updateUserBar() {
-      const emailText = document.getElementById('userEmailText');
-      emailText.innerText = currentUserEmail ? currentUserEmail : 'Email belum diatur';
-    }
-
-    function openEmailModal() {
-      document.getElementById('inputEmail').value = currentUserEmail;
-      document.getElementById('emailModal').classList.add('active');
-    }
-
-    function saveEmail(e) {
-      e.preventDefault();
-      const val = document.getElementById('inputEmail').value.trim();
-      if (val) {
-        currentUserEmail = val;
-        localStorage.setItem('athalia_user_email', currentUserEmail);
-        updateUserBar();
-        closeModal('emailModal');
-      }
-    }
 
     function loadData() {
       // 1. Ambil data dari cache lokal (localStorage)
@@ -263,7 +195,7 @@
         }
       }
 
-      // 2. Ambil data terbaru dari server di background (Stale-While-Revalidate)
+      // 2. Ambil data terbaru di background
       fetch(`${GAS_URL}?action=getData&t=${new Date().getTime()}`)
         .then(res => res.json())
         .then(data => {
@@ -292,47 +224,23 @@
       linksList.innerHTML = '';
 
       links.forEach(function(link) {
-        const btn = document.createElement('button');
-        btn.className = 'link-btn';
-        btn.style.backgroundColor = themeColor;
-        const iconClass = link.icon ? link.icon : 'fas fa-link';
-        btn.innerHTML = `<i class="${iconClass}"></i><span>${link.title}</span>`;
+        // Menggunakan tag <a> agar diklik langsung instan (0 detik)
+        const a = document.createElement('a');
+        a.className = 'link-btn';
+        a.style.backgroundColor = themeColor;
+        a.href = link.url || '#';
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
         
-        btn.onclick = function() {
-          handleLinkClick(link.rowId, btn, link.title, iconClass);
-        };
+        const iconClass = link.icon ? link.icon : 'fas fa-link';
+        a.innerHTML = `<i class="${iconClass}"></i><span>${link.title}</span>`;
 
-        linksList.appendChild(btn);
+        linksList.appendChild(a);
       });
 
       document.getElementById('year').innerText = new Date().getFullYear();
       document.getElementById('loading').style.display = 'none';
       document.getElementById('content').style.display = 'block';
-    }
-
-    function handleLinkClick(rowId, btnElement, title, iconClass) {
-      if (!currentUserEmail) {
-        openEmailModal();
-        return;
-      }
-
-      btnElement.innerHTML = `<i class="fas fa-spinner fa-spin"></i><span>Memeriksa Akses...</span>`;
-      btnElement.style.pointerEvents = 'none';
-
-      fetch(`${GAS_URL}?action=getLinkAccess&rowId=${rowId}&email=${encodeURIComponent(currentUserEmail)}`)
-        .then(res => res.json())
-        .then(res => {
-          btnElement.innerHTML = `<i class="${iconClass}"></i><span>${title}</span>`;
-          btnElement.style.pointerEvents = 'auto';
-
-          if (res.success && res.url) {
-            window.open(res.url, '_blank');
-          } else {
-            document.getElementById('accessModalMsg').innerHTML = 
-              `Email <strong>${currentUserEmail}</strong> tidak diizinkan. Gunakan email berakhiran <strong>@sekolahathalia.sch.id</strong>.`;
-            document.getElementById('accessModal').classList.add('active');
-          }
-        });
     }
 
     function openAdminAuthModal() {
