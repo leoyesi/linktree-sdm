@@ -230,7 +230,8 @@
       }
 
       // 2. Ambil data terbaru dari server di background (Stale-While-Revalidate)
-      fetch(`${GAS_URL}?action=getData`)
+      // KODE BARU (Mencegah Cache Browser):
+      fetch(`${GAS_URL}?action=getData&t=${new Date().getTime()}`)
         .then(res => res.json())
         .then(data => {
           if (data.success) {
